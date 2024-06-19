@@ -1,0 +1,9 @@
+[Interface]
+Address = <%= Array(@address).join(', ') %> # client IP/mask
+PrivateKey = <%= @private_key %>
+
+[Peer]
+Endpoint = <%= @endpoint %>
+PublicKey = <%= @public_key %> # server public key
+AllowedIPs = <%= Array(@allowed_ips).join(', ') %>
+PersistentKeepalive = 25 # force initial communication with server

@@ -1,0 +1,79 @@
+---
+driver:
+  name: dokken
+  privileged: true # allows systemd services to start
+  chef_image: cincproject/cinc
+  chef_version: <%= ENV.fetch('CHEF_VERSION', 18) %>
+
+provisioner:
+  name: dokken
+  product_name: cinc
+  chef_binary: /opt/cinc/bin/cinc-client
+  deprecations_as_errors: true
+  enforce_idempotency: true
+  multiple_converge: 2
+
+transport:
+  name: dokken
+
+verifier:
+  name: inspec
+
+platforms:
+  # @see https://github.com/chef-cookbooks/testing_examples/blob/main/kitchen.dokken.yml
+  # @see https://hub.docker.com/u/dokken
+  - name: debian-11
+    driver:
+      image: dokken/debian-11
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+        - RUN /usr/bin/apt-get upgrade -y
+  - name: debian-12
+    driver:
+      image: dokken/debian-12
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+        - RUN /usr/bin/apt-get upgrade -y
+  - name: ubuntu-22.04
+    driver:
+      image: dokken/ubuntu-22.04
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+        - RUN /usr/bin/apt-get upgrade -y
+  - name: ubuntu-2404
+    driver:
+      image: dokken/ubuntu-24.04
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+        - RUN /usr/bin/apt-get upgrade -y
+
+suites:
+  - name: server
+    run_list:
+      - recipe[wireguard::server]
+    attributes:
+      wireguard:
+        server:
+          address: "10.0.0.1/24"
+          public_key: "zdx6nLrGZbsmFr8+zWjEVpt+K8NSdhtJejGuD/BBAwo="
+          private_key: "cKTRrWKWBAbvdgSx7brEAKl+fS9ZADcrzdgVrNRbfWw="
+          peers:
+            "10.0.0.2/32": "EbOjsIcZSbaAKXBLs+lEpTwAoRV438snysiggK9QAFc="
+            "10.0.0.3/32": "YzAx35YiFN4ZrlK9xyvT8UePMz0BCqIx6CrTrwsyI0s="
+  - name: client
+    run_list:
+      - recipe[wireguard::client]
+    attributes:
+      wireguard:
+        server:
+          address: "10.0.0.1/24"
+          public_key: "zdx6nLrGZbsmFr8+zWjEVpt+K8NSdhtJejGuD/BBAwo="
+        client:
+          public_key: "YzAx35YiFN4ZrlK9xyvT8UePMz0BCqIx6CrTrwsyI0s="
+          private_key: "6BpqO2LShKXW+8LvjcINlNcoHA28QX9qN7/bHwL+80c="
+          endpoint: "1.1.1.1:51820"
+          address: "10.0.0.3/32"

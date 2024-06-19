@@ -1,0 +1,11 @@
+[Interface]
+Address    = <%= Array(@address).join(', ') %>
+ListenPort = <%= @port %>
+PrivateKey = <%= @private_key %>
+
+<% @peers.each do |address, public_key| %>
+[Peer]
+PublicKey  = <%= public_key %>
+AllowedIPs = <%= Array(address).join(', ') %>
+
+<% end %>
