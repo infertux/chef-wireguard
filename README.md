@@ -1,5 +1,9 @@
 # Wireguard Chef cookbook
 
+[![Funding](https://img.shields.io/liberapay/patrons/infertux.svg?logo=liberapay)](https://liberapay.com/infertux/donate)
+[![Cookbook](https://img.shields.io/cookbook/v/wireguard.svg)](https://supermarket.getchef.com/cookbooks/wireguard)
+[![Build Status](https://github.com/infertux/chef-wireguard/actions/workflows/test.yml/badge.svg)](https://github.com/infertux/chef-wireguard/actions)
+
 ## Example usage
 
 Let's assume a server listening on a static public address [2001:1:2:3::cafe] on UDP port 51820

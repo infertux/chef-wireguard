@@ -15,7 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ "default-debian-11", "default-debian-12", "default-ubuntu-2204", "default-ubuntu-2404" ]
+        recipe: [ "server", "client" ]
+        platform: [ "debian-11", "debian-12", "ubuntu-2204", "ubuntu-2404" ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
@@ -23,8 +24,8 @@ jobs:
         with:
           ruby-version: ruby  # latest stable release
           bundler-cache: true  # runs 'bundle install' and caches installed gems automatically
-      - name: Run Test Kitchen platform ${{ matrix.platform }}
-        run: bundle exec rake kitchen:${{ matrix.platform }}
+      - name: Run Test Kitchen ${{ matrix.recipe }}-${{ matrix.platform }}
+        run: bundle exec rake kitchen:${{ matrix.recipe }}-${{ matrix.platform }}
   style:
     runs-on: ubuntu-latest
     steps:
